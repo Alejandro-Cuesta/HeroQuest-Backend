@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 /**
  * TokenService:
  * Servicio responsable de generar tokens JWT firmados (symmetric HS512),
- * siguiendo la estructura del ejemplo del profesor.
+ * sigue la estructura de Giacomo.
  *
  * - Usa un JwtEncoder (de Spring Security) para crear el token.
  * - Añade claims útiles: issuer, issuedAt, subject, expiresAt y scope.

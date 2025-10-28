@@ -20,7 +20,7 @@ public interface UserMapper {
      */
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-     // Convierte un objeto UserRegisterDTORequest → User (para guardar en la base de datos)
+     // Convierte un objeto UserRegisterDTORequest a User (para guardar en la base de datos)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "password", source = "password")
     @Mapping(target = "displayName", source = "displayName")
@@ -28,7 +28,7 @@ public interface UserMapper {
     User toUser(UserRegisterDTORequest dto);
 
     /**
-     * Convierte un objeto User → UserDTOResponse (para devolver al frontend)
+     * Convierte un objeto User a UserDTOResponse (para devolver al frontend)
      * Aquí nunca incluimos la contraseña por seguridad.
      */
     UserDTOResponse toUserDTOResponse(User user);

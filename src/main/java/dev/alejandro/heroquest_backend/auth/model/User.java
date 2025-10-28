@@ -25,4 +25,7 @@ public class User implements Serializable {
 
     @Column(nullable = false)
     private String password;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Hero hero;
 }
