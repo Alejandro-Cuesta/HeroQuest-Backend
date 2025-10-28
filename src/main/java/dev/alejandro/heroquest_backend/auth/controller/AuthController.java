@@ -24,7 +24,6 @@ public class AuthController {
     private final AuthService authService;
 
     // Endpoint de registro
-     
     @PostMapping("/register")
     public ResponseEntity<UserDTOResponse> register(
             @Valid @RequestBody UserRegisterDTORequest dto) {
@@ -33,7 +32,6 @@ public class AuthController {
     }
 
     // Endpoint de login
-    
     @PostMapping("/login")
     public ResponseEntity<UserDTOResponse> login(
             @Valid @RequestBody UserLoginDTORequest dto) {
