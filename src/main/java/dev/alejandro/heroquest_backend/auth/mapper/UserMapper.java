@@ -8,28 +8,33 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 /**
- * Usamos MapStruct, que genera el código de conversión
- * durante la compilación (no en tiempo de ejecución).
+ * Mapper con MapStruct para convertir entre User y sus DTOs.
+ * Evita exponer entidades directamente en la API y protege la contraseña.
  */
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
     /**
-     * Instancia del mapper generada automáticamente por MapStruct.
-     * Se inyectará como un bean de Spring.
+     * Instancia automática generada por MapStruct.
+     * Se puede inyectar como bean de Spring.
      */
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-     // Convierte un objeto UserRegisterDTORequest a User (para guardar en la base de datos)
+    /**
+     * Convierte un DTO de registro en entidad User.
+     * Ignora el ID y el héroe porque se asignarán automáticamente.
+     */
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "hero", ignore = true) // ignoramos hero al crear User
     @Mapping(target = "password", source = "password")
     @Mapping(target = "displayName", source = "displayName")
     @Mapping(target = "username", source = "username")
     User toUser(UserRegisterDTORequest dto);
 
     /**
-     * Convierte un objeto User a UserDTOResponse (para devolver al frontend)
-     * Aquí nunca incluimos la contraseña por seguridad.
+     * Convierte un User a DTO de salida.
+     * Devuelve los datos de usuario sin incluir la contraseña.
+     * Ya no incluimos hero porque el DTO actual no tiene esa propiedad.
      */
     UserDTOResponse toUserDTOResponse(User user);
 }

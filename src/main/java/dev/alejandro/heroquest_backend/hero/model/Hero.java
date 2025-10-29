@@ -25,18 +25,30 @@ public class Hero {
     @Column(nullable = false, unique = true)
     private String heroClass;
 
-    // Estadísticas básicas (opcionales)
+    // Estadísticas básicas
     @Column(nullable = false)
+    @Builder.Default
     private int health = 10;
 
     @Column(nullable = false)
+    @Builder.Default
     private int attack = 10;
 
     @Column(nullable = false)
+    @Builder.Default
     private int defense = 10;
 
     @Column(nullable = false)
-    private int movment = 10;
+    @Builder.Default
+    private int movement = 10;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private int experiencia = 0;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private int nivel = 1;
 
     /**
      * Relación 1:1 con User.

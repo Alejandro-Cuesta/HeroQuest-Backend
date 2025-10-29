@@ -1,9 +1,14 @@
 package dev.alejandro.heroquest_backend.auth.model;
 
+import dev.alejandro.heroquest_backend.hero.model.Hero;
 import jakarta.persistence.*;
 import lombok.*;
 import java.io.Serializable;
 
+/**
+ * Entidad User
+ * Representa a un usuario registrado en la aplicación.
+ */
 @Entity
 @Table(name = "users")
 @Getter
@@ -26,6 +31,10 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String password;
 
+    /**
+     * Relación 1:1 con Hero.
+     * Cada usuario tiene exactamente un héroe.
+     */
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Hero hero;
 }
