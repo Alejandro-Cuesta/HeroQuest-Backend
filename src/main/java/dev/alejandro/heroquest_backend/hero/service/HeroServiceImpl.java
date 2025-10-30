@@ -11,9 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Implementación del servicio HeroService.
- * - Crea un nuevo héroe vinculado a un usuario.
+ * Implementa la lógica principal de gestión de héroes.
  * - Evita duplicados (solo un héroe por usuario).
+ * - Asigna automáticamente las estadísticas base según el tipo de héroe.
+ * - Lanza error si el usuario ya tiene un héroe.
  */
 @Service
 @RequiredArgsConstructor
@@ -25,14 +26,41 @@ public class HeroServiceImpl implements HeroService {
 
     @Override
     public HeroDTOResponse createHero(User user, HeroDTORequest dto) {
-        // Si ya tiene un héroe, lanzamos error
+        // Verificamos que el usuario no tenga ya un héroe asignado
         if (heroRepository.existsByUser(user)) {
             throw new IllegalStateException("This user already has a hero assigned");
         }
 
-        Hero hero = heroMapper.toHero(dto);
-        hero.setUser(user); // vinculamos el héroe al usuario
+        // Creamos la entidad Hero y la asociamos al usuario autenticado
+        Hero hero = new Hero();
+        hero.setUser(user);
+        hero.setHeroClass(dto.getHeroClass());
 
+        // Asignamos estadísticas iniciales según la clase elegida
+        switch (dto.getHeroClass().toLowerCase()) {
+            case "barbarian":
+                hero.setHealth(12);
+                hero.setAttack(14);
+                hero.setDefense(8);
+                hero.setMovement(6);
+                hero.setExperiencia(0);
+                hero.setNivel(1);
+                break;
+
+            case "warrior":
+                hero.setHealth(10);
+                hero.setAttack(10);
+                hero.setDefense(12);
+                hero.setMovement(5);
+                hero.setExperiencia(0);
+                hero.setNivel(1);
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unknown hero class: " + dto.getHeroClass());
+        }
+
+        // Guardamos en la base de datos y devolvemos la respuesta
         Hero savedHero = heroRepository.save(hero);
         return heroMapper.toHeroDTOResponse(savedHero);
     }

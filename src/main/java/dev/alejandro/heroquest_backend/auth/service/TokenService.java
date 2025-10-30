@@ -56,7 +56,7 @@ public class TokenService {
                 .issuer("heroquest-backend")
                 .issuedAt(now)
                 .subject(authentication.getName())
-                .expiresAt(now.plus(1, ChronoUnit.HOURS)) // 1 hora de duración
+                .expiresAt(now.plus(7, ChronoUnit.DAYS)) // 7 dias de duración (para que Postman deje de volverme loco)
                 .claim("scope", scope)
                 .build();
 
