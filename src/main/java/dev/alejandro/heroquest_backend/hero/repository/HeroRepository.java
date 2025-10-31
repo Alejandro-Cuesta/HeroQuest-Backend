@@ -17,6 +17,9 @@ public interface HeroRepository extends JpaRepository<Hero, Long> {
     // Busca el héroe asociado a un usuario concreto
     Optional<Hero> findByUser(User user);
 
+    // Búsqueda directa por username (evita errores de referencia de entidad)
+    Optional<Hero> findByUser_Username(String username);
+
     // Verifica si un usuario ya tiene héroe
     boolean existsByUser(User user);
 }

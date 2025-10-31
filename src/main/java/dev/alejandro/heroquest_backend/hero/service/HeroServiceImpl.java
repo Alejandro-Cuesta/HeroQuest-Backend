@@ -3,6 +3,7 @@ package dev.alejandro.heroquest_backend.hero.service;
 import dev.alejandro.heroquest_backend.auth.model.User;
 import dev.alejandro.heroquest_backend.hero.dto.HeroDTORequest;
 import dev.alejandro.heroquest_backend.hero.dto.HeroDTOResponse;
+import dev.alejandro.heroquest_backend.hero.dto.HeroUpdateStatsDTO;
 import dev.alejandro.heroquest_backend.hero.mapper.HeroMapper;
 import dev.alejandro.heroquest_backend.hero.model.Hero;
 import dev.alejandro.heroquest_backend.hero.repository.HeroRepository;
@@ -45,6 +46,7 @@ public class HeroServiceImpl implements HeroService {
                 hero.setMovement(6);
                 hero.setExperiencia(0);
                 hero.setNivel(1);
+                hero.setPuntosRestantes(15);
                 break;
 
             case "warrior":
@@ -54,6 +56,7 @@ public class HeroServiceImpl implements HeroService {
                 hero.setMovement(5);
                 hero.setExperiencia(0);
                 hero.setNivel(1);
+                hero.setPuntosRestantes(15);
                 break;
 
             default:
@@ -70,5 +73,25 @@ public class HeroServiceImpl implements HeroService {
         Hero hero = heroRepository.findByUser(user)
                 .orElseThrow(() -> new IllegalStateException("This user has no hero assigned"));
         return heroMapper.toHeroDTOResponse(hero);
+    }
+
+    /**
+     * Actualizar las estadísticas del héroe autenticado.
+     * Se llama automáticamente desde el frontend al modificar un stat.
+     */
+    @Override
+    public HeroDTOResponse updateHeroStats(User user, HeroUpdateStatsDTO dto) {
+        Hero hero = heroRepository.findByUser(user)
+                .orElseThrow(() -> new IllegalStateException("This user has no hero assigned"));
+
+        // Actualizamos los campos con los valores del DTO
+        hero.setHealth(dto.getVida());
+        hero.setAttack(dto.getDaño());
+        hero.setDefense(dto.getDefensa());
+        hero.setMovement(dto.getMovimiento());
+        hero.setPuntosRestantes(dto.getPuntosRestantes());
+
+        Hero updated = heroRepository.save(hero);
+        return heroMapper.toHeroDTOResponse(updated);
     }
 }

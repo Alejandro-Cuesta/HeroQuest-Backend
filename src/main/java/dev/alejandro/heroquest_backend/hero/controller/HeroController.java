@@ -4,6 +4,7 @@ import dev.alejandro.heroquest_backend.auth.model.User;
 import dev.alejandro.heroquest_backend.auth.repository.UserRepository;
 import dev.alejandro.heroquest_backend.hero.dto.HeroDTORequest;
 import dev.alejandro.heroquest_backend.hero.dto.HeroDTOResponse;
+import dev.alejandro.heroquest_backend.hero.dto.HeroUpdateStatsDTO;
 import dev.alejandro.heroquest_backend.hero.service.HeroService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +32,10 @@ public class HeroController {
      */
     @PostMapping
     public ResponseEntity<HeroDTOResponse> createHero(
-            @AuthenticationPrincipal Jwt jwt, //  usamos Jwt en lugar de User
+            @AuthenticationPrincipal Jwt jwt,
             @Valid @RequestBody HeroDTORequest dto) {
 
-        String username = jwt.getSubject(); //  leemos el username desde el token
+        String username = jwt.getSubject();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found: " + username));
 
@@ -42,17 +43,34 @@ public class HeroController {
         return new ResponseEntity<>(heroResponse, HttpStatus.CREATED);
     }
 
-
     /**
      * Obtener el héroe del usuario autenticado.
      */
     @GetMapping
     public ResponseEntity<HeroDTOResponse> getHero(@AuthenticationPrincipal Jwt jwt) {
-        String username = jwt.getSubject(); //  aquí igual
+        String username = jwt.getSubject();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found: " + username));
 
         HeroDTOResponse heroResponse = heroService.getHeroByUser(user);
         return ResponseEntity.ok(heroResponse);
+    }
+
+    /**
+     * Actualizar estadísticas del héroe autenticado.
+     * Endpoint llamado automáticamente desde el frontend cada vez que se modifican los stats.
+     * URL: PUT /api/hero/update-stats
+     */
+    @PutMapping("/update-stats")
+    public ResponseEntity<HeroDTOResponse> updateHeroStats(
+            @AuthenticationPrincipal Jwt jwt,
+            @Valid @RequestBody HeroUpdateStatsDTO dto) {
+
+        String username = jwt.getSubject();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+
+        HeroDTOResponse updated = heroService.updateHeroStats(user, dto);
+        return ResponseEntity.ok(updated);
     }
 }

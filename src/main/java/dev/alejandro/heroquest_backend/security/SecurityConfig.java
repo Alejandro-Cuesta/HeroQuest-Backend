@@ -40,7 +40,8 @@ public class SecurityConfig {
     @Value("${jwt.key}")
     private String key;
 
-    @Value("${api-endpoint}")
+    // ✅ FIX 1: hacemos opcional el "endpoint" en caso de que falte en application.properties
+    @Value("${api-endpoint:/api}")
     private String endpoint;
 
     private final JpaUserDetailsService jpaUserDetailsService;
@@ -64,10 +65,21 @@ public class SecurityConfig {
             // 🔓 Endpoints públicos
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/h2-console/**").permitAll()
+
+                // ✅ FIX 2: añadimos rutas absolutas sin depender del endpoint variable
+                .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+
+                // Mantiene compatibilidad si endpoint está configurado correctamente
                 .requestMatchers(HttpMethod.POST, endpoint + "/auth/register").permitAll()
                 .requestMatchers(HttpMethod.POST, endpoint + "/auth/login").permitAll()
+
                 // Generar token requiere Basic Auth (usuario válido)
                 .requestMatchers(HttpMethod.POST, endpoint + "/auth/token").authenticated()
+
+                // ✅ FIX 3: permitimos OPTIONS (preflight CORS)
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                 // Todo lo demás necesita autenticación
                 .anyRequest().authenticated()
             )
@@ -123,7 +135,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

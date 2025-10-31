@@ -49,6 +49,10 @@ public class Hero {
     @Column(nullable = false)
     @Builder.Default
     private int nivel = 1;
+    
+    @Column(nullable = false)
+    @Builder.Default
+    private int puntosRestantes = 15;
 
     /**
      * Relación 1:1 con User.
