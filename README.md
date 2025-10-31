@@ -30,7 +30,7 @@ Desarrollado con **Spring Boot** y una base de datos **MySQL**, proporciona una 
 - Opcional: **DBeaver** para gestionar la base de datos de forma gráfica
 
 ### 🚀 Clonar el repositorio
-```bash
+
 git clone https://github.com/Alejandro-Cuesta/HeroQuest-Backend.git
 cd HeroQuest-Backend
 
@@ -99,18 +99,18 @@ heroquest-backend/
 └── README.md
 
 
-##  Diagramas
+## 🧩 Diagramas
 
-##  Diagrama de Clases
+### Diagrama de Clases
 ![Diagrama de Clases](./src/docs/DiagramaClases.png)
 
-##  Diagrama de Realciones (Patas de Gallo)
+### Diagrama de Relaciones (Patas de Gallo)
 ![Diagrama de Patas de Gallo](./src/docs/DiagramaPatasdeGallo.png)
 
-##  Diagrama de Flujo
+### Diagrama de Flujo
 ![Diagrama de Flujo](./src/docs/DiagramaFlujo.png)
 
-##  Cobertura de Tests
+### Cobertura de Tests
 ![Cobertura de Tests](./src/docs/Cobertura.png)
 
 ##  Autor
