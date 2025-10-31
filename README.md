@@ -36,7 +36,7 @@ cd HeroQuest-Backend
 
 
 ##  Estructura
-
+```bash
 heroquest-backend/
 ├── src/
 │ ├── main/
@@ -97,7 +97,7 @@ heroquest-backend/
 ├── docker-compose.yml
 ├── pom.xml
 └── README.md
-
+```
 
 ## 🧩 Diagramas
 
