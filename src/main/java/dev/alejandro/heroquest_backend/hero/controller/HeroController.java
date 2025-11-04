@@ -10,8 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -23,8 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class HeroController {
 
     private final HeroService heroService;
-    private final UserRepository userRepository; // añadimos esto para buscar al usuario en BD
-
+    private final UserRepository userRepository;
 
     /**
      * Crear héroe para el usuario autenticado.
@@ -32,10 +30,10 @@ public class HeroController {
      */
     @PostMapping
     public ResponseEntity<HeroDTOResponse> createHero(
-            @AuthenticationPrincipal Jwt jwt,
+            Authentication authentication,
             @Valid @RequestBody HeroDTORequest dto) {
 
-        String username = jwt.getSubject();
+        String username = authentication.getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found: " + username));
 
@@ -47,8 +45,8 @@ public class HeroController {
      * Obtener el héroe del usuario autenticado.
      */
     @GetMapping
-    public ResponseEntity<HeroDTOResponse> getHero(@AuthenticationPrincipal Jwt jwt) {
-        String username = jwt.getSubject();
+    public ResponseEntity<HeroDTOResponse> getHero(Authentication authentication) {
+        String username = authentication.getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found: " + username));
 
@@ -63,10 +61,10 @@ public class HeroController {
      */
     @PutMapping("/update-stats")
     public ResponseEntity<HeroDTOResponse> updateHeroStats(
-            @AuthenticationPrincipal Jwt jwt,
+            Authentication authentication,
             @Valid @RequestBody HeroUpdateStatsDTO dto) {
 
-        String username = jwt.getSubject();
+        String username = authentication.getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found: " + username));
 

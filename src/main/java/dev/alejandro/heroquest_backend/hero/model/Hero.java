@@ -22,7 +22,7 @@ public class Hero {
     private Long id;
 
     // Clase del héroe: "Barbarian", "Wizard", "Elf", "Dwarf"...
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String heroClass;
 
     // Estadísticas básicas

@@ -27,17 +27,14 @@ public class HeroServiceImpl implements HeroService {
 
     @Override
     public HeroDTOResponse createHero(User user, HeroDTORequest dto) {
-        // Verificamos que el usuario no tenga ya un héroe asignado
         if (heroRepository.existsByUser(user)) {
             throw new IllegalStateException("This user already has a hero assigned");
         }
 
-        // Creamos la entidad Hero y la asociamos al usuario autenticado
         Hero hero = new Hero();
         hero.setUser(user);
         hero.setHeroClass(dto.getHeroClass());
 
-        // Asignamos estadísticas iniciales según la clase elegida
         switch (dto.getHeroClass().toLowerCase()) {
             case "barbarian":
                 hero.setHealth(12);
@@ -63,7 +60,6 @@ public class HeroServiceImpl implements HeroService {
                 throw new IllegalArgumentException("Unknown hero class: " + dto.getHeroClass());
         }
 
-        // Guardamos en la base de datos y devolvemos la respuesta
         Hero savedHero = heroRepository.save(hero);
         return heroMapper.toHeroDTOResponse(savedHero);
     }
@@ -75,20 +71,16 @@ public class HeroServiceImpl implements HeroService {
         return heroMapper.toHeroDTOResponse(hero);
     }
 
-    /**
-     * Actualizar las estadísticas del héroe autenticado.
-     * Se llama automáticamente desde el frontend al modificar un stat.
-     */
     @Override
     public HeroDTOResponse updateHeroStats(User user, HeroUpdateStatsDTO dto) {
         Hero hero = heroRepository.findByUser(user)
                 .orElseThrow(() -> new IllegalStateException("This user has no hero assigned"));
 
-        // Actualizamos los campos con los valores del DTO
-        hero.setHealth(dto.getVida());
-        hero.setAttack(dto.getDaño());
-        hero.setDefense(dto.getDefensa());
-        hero.setMovement(dto.getMovimiento());
+        // Usamos getters en inglés gracias a @JsonProperty
+        hero.setHealth(dto.getHealth());
+        hero.setAttack(dto.getAttack());
+        hero.setDefense(dto.getDefense());
+        hero.setMovement(dto.getMovement());
         hero.setPuntosRestantes(dto.getPuntosRestantes());
 
         Hero updated = heroRepository.save(hero);

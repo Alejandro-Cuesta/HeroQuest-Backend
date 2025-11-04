@@ -1,39 +1,29 @@
 package dev.alejandro.heroquest_backend.hero.mapper;
 
-import dev.alejandro.heroquest_backend.hero.dto.HeroDTORequest;
 import dev.alejandro.heroquest_backend.hero.dto.HeroDTOResponse;
 import dev.alejandro.heroquest_backend.hero.model.Hero;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Component;
 
 /**
- * Mapper con MapStruct para convertir entre Hero y HeroDTO.
- * Evita exponer entidades directamente en la API.
+ * Mapper para convertir entre entidad Hero y DTO de respuesta HeroDTOResponse.
+ * Aquí aseguramos que los nombres se muestren en castellano en la UI.
  */
-@Mapper(componentModel = "spring")
-public interface HeroMapper {
+@Component
+public class HeroMapper {
 
-    /**
-     * Instancia automática generada por MapStruct.
-     * Se puede inyectar como bean de Spring.
-     */
-    HeroMapper INSTANCE = Mappers.getMapper(HeroMapper.class);
+    public HeroDTOResponse toHeroDTOResponse(Hero hero) {
+        if (hero == null) return null;
 
-    /**
-     * Convierte un DTO de creación en entidad Hero.
-     * Se ignora el ID y el usuario porque se asignarán automáticamente.
-     */
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user", ignore = true)
-    Hero toHero(HeroDTORequest dto);
-
-    /**
-     * Convierte una entidad Hero a DTO de salida.
-     * Devuelve todos los datos visibles del héroe sin exponer el usuario.
-     */
-    @Mapping(source = "movement", target = "movement")
-    @Mapping(source = "experiencia", target = "experiencia")
-    @Mapping(source = "nivel", target = "nivel")
-    HeroDTOResponse toHeroDTOResponse(Hero hero);
+        return HeroDTOResponse.builder()
+                .id(hero.getId())
+                .heroClass(hero.getHeroClass())
+                .health(hero.getHealth())
+                .attack(hero.getAttack())
+                .defense(hero.getDefense())
+                .movement(hero.getMovement())
+                .experiencia(hero.getExperiencia())
+                .nivel(hero.getNivel())
+                .puntosRestantes(hero.getPuntosRestantes())
+                .build();
+    }
 }
